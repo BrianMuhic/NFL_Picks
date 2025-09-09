@@ -1,23 +1,37 @@
 {
-  "name": "nfl_picks",
+  "name": "nfl-weekly-picks",
   "version": "1.0.0",
-  "description": "",
+  "description": "NFL Weekly Picks application with PostgreSQL support",
   "main": "app.js",
   "scripts": {
-    "start" : "node app-new.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^3.0.2",
-    "better-sqlite3": "^12.2.0",
-    "body-parser": "^2.2.0",
-    "cookie-parser": "^1.4.7",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
     "csurf": "^1.11.0",
-    "express": "^5.1.0",
-    "express-session": "^1.18.2",
-    "helmet": "^8.1.0",
-    "uuid": "^11.1.0"
-  }
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "helmet": "^7.0.0",
+    "pg": "^8.11.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "nfl",
+    "picks",
+    "football",
+    "express",
+    "postgresql",
+    "sports"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
 }

@@ -1,6 +1,4 @@
 const { db } = require('../config/database');
-
-// Import templates for requireAdmin function
 const { tplLayout } = require('./templates');
 
 // Authentication helpers
@@ -27,10 +25,9 @@ function requireAdmin(req, res, next) {
 }
 
 // Pick deadline helpers
-function canMakePicks(week) {
+async function canMakePicks(week) {
   try {
-    // Fixed: Remove the is_active check since it doesn't exist in the schema
-    const deadline = db.prepare('SELECT deadline FROM pick_deadlines WHERE week = ?').get(week);
+    const deadline = await db.prepare('SELECT deadline FROM pick_deadlines WHERE week = $1').get(week);
     if (!deadline) return true; // No deadline set, allow picks
     
     const now = new Date();
@@ -42,10 +39,9 @@ function canMakePicks(week) {
   }
 }
 
-function getPickDeadline(week) {
+async function getPickDeadline(week) {
   try {
-    // Fixed: Remove the is_active check since it doesn't exist in the schema
-    const deadline = db.prepare('SELECT deadline FROM pick_deadlines WHERE week = ?').get(week);
+    const deadline = await db.prepare('SELECT deadline FROM pick_deadlines WHERE week = $1').get(week);
     return deadline ? deadline.deadline : null;
   } catch (error) {
     console.error('Error getting pick deadline:', error);
@@ -78,6 +74,8 @@ function weekSelector(currentWeek, basePath = '') {
           url = `/admin/picks?week=${week}`;
         } else if (basePath === 'admin/games') {
           url = `/admin/games?week=${week}`;
+        } else if (basePath === 'all-picks') {
+          url = `/all-picks?week=${week}`;
         } else {
           url = `/${basePath}?week=${week}`;
         }

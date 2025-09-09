@@ -246,16 +246,16 @@ async function populateFullSeason(season = new Date().getFullYear()) {
       return;
     }
 
-    const insert = db.prepare(`
-      INSERT OR IGNORE INTO games
-        (id, week, away, home, kickoff, status, away_score, home_score, winner, nfl_game_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-
     let insertedCount = 0;
+    
+    // Use transaction for bulk inserts
     const tx = db.transaction(() => {
       for (const g of games) {
-        const result = insert.run(
+        const result = db.prepare(`
+          INSERT INTO games (id, week, away, home, kickoff, status, away_score, home_score, winner, nfl_game_id)
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+          ON CONFLICT(week, away, home) DO NOTHING
+        `).run(
           uuidv4(),
           g.week,
           g.away,
@@ -273,7 +273,7 @@ async function populateFullSeason(season = new Date().getFullYear()) {
       }
     });
 
-    tx();
+    await tx();
     console.log(`Successfully inserted ${insertedCount} unique games for ${season} season.`);
     console.log(`Total games fetched: ${games.length}`);
   } catch (error) {
